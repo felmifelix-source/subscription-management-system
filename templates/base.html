@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brightloop | Subscription Manager</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if me %}
+<header class="topbar">
+  <a class="brand" href="{{ url_for('dashboard') }}">brightloop<span>.</span></a>
+  <div class="top-right"><span>{{ me.name }} · {{ me.role|title }}</span><a class="logout" href="{{ url_for('logout') }}">Log out</a></div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <div class="nav-label">WORKSPACE</div>
+  <a href="{{ url_for('dashboard') }}">▦ Dashboard</a>
+  <a href="{{ url_for('subscriptions') }}">◷ Subscriptions</a>
+  <a href="{{ url_for('invoices') }}">▤ Invoices</a>
+  <a href="{{ url_for('payments') }}">₹ Payments</a>
+  {% if me.role == 'admin' %}
+  <div class="nav-label">ADMINISTRATION</div>
+  <a href="{{ url_for('products') }}">□ Products</a>
+  <a href="{{ url_for('plans') }}">◇ Plans</a>
+  <a href="{{ url_for('discounts') }}">％ Discounts</a>
+  <a href="{{ url_for('staff') }}">♙ Staff</a>
+  {% endif %}
+  {% if me.role in ['admin','staff'] %}<a href="{{ url_for('reports') }}">▥ Reports</a>{% endif %}
+  <div class="side-note">Subscription operations, made simple.</div>
+</aside>
+<main class="main">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}{% for category,message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+{% endwith %}
+{% block content %}{% endblock %}
+</main>
+</div>
+{% else %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}<div class="auth-alerts">{% for category,message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+{% endwith %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+</body></html>
