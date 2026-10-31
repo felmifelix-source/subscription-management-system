@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<div class="page-head"><div><p class="eyebrow">BUSINESS INTELLIGENCE</p><h1>Reports</h1><p class="muted">A quick view of subscription and billing performance.</p></div></div>
+<div class="stats"><div class="stat"><span>Customers</span><strong>{{ customers }}</strong></div><div class="stat"><span>Revenue received</span><strong>{{ money(paid) }}</strong></div><div class="stat"><span>Outstanding invoices</span><strong>{{ money(unpaid) }}</strong></div><div class="stat"><span>Overdue invoices</span><strong>{{ overdue }}</strong></div></div>
+<div class="panel"><h2>Subscriptions by status</h2>{% for item in by_status %}<div class="list-row"><b>{{ item.status }}</b><strong>{{ item.count }}</strong></div>{% else %}<div class="empty">No subscription data yet.</div>{% endfor %}</div>
+{% endblock %}

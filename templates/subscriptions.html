@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block content %}
+<div class="page-head"><div><p class="eyebrow">CUSTOMER CONTRACTS</p><h1>Subscriptions</h1><p class="muted">Create, confirm, pause, renew and close subscriptions.</p></div></div>
+<div class="panel"><h2>Create subscription</h2>
+{% if not products or not plans %}<div class="empty">An admin must create at least one product and one plan first.</div>{% else %}
+<form method="post" class="form">
+{% if me.role!='customer' %}<label>Customer<select name="customer_id" required>{% for c in customers %}<option value="{{ c.id }}">{{ c.name }} ({{ c.email }})</option>{% endfor %}</select></label>{% else %}<p class="muted">This subscription will be created for your account.</p>{% endif %}
+<div class="form-row"><label>Product<select name="product_id">{% for p in products %}<option value="{{ p.id }}">{{ p.name }} · {{ money(p.sales_price) }}</option>{% endfor %}</select></label><label>Plan<select name="plan_id">{% for p in plans %}<option value="{{ p.id }}">{{ p.name }} · {{ p.billing_cycle }} · {{ money(p.price) }}</option>{% endfor %}</select></label></div>
+<div class="form-row"><label>Quantity<input type="number" min="1" name="quantity" value="1"></label><label>Payment terms<select name="payment_terms"><option>Due on receipt</option><option>Net 7</option><option>Net 15</option><option>Net 30</option></select></label></div>
+<div class="form-row"><label>Start date<input type="date" name="start_date" value="{{ today }}"></label><label>Expiry date (optional)<input type="date" name="expiry_date"></label></div>
+<label>Discount (optional)<select name="discount_id"><option value="">No discount</option>{% for d in discounts %}<option value="{{ d.id }}">{{ d.name }} · {{ d.value }}{% if d.discount_type=='Percentage' %}%{% else %} ₹{% endif %}</option>{% endfor %}</select></label>
+<button class="btn primary">Create draft subscription</button></form>{% endif %}</div>
+<div class="panel"><div class="panel-head"><h2>All subscriptions</h2><span class="muted">{{ rows|length }} records</span></div>
+{% if rows %}<div class="table-wrap"><table><thead><tr><th>Number</th><th>Customer</th><th>Product / Plan</th><th>Qty</th><th>Start</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for s in rows %}<tr><td>{{ s.number }}</td><td>{{ s.customer }}</td><td>{{ s.product }}<small>{{ s.plan }}</small></td><td>{{ s.quantity }}</td><td>{{ s.start_date }}</td><td><span class="status">{{ s.status }}</span></td><td class="actions">
+{% if me.role in ['admin','staff'] and s.status=='Draft' %}<form method="post" action="{{ url_for('subscription_action',sid=s.id,action='confirm') }}"><button class="btn tiny">Confirm + invoice</button></form>{% endif %}
+{% if s.status=='Active' %}<form method="post" action="{{ url_for('subscription_action',sid=s.id,action='pause') }}"><button class="btn tiny light">Pause</button></form>{% endif %}
+{% if s.status in ['Paused','Closed'] and me.role in ['admin','staff'] %}<form method="post" action="{{ url_for('subscription_action',sid=s.id,action='renew') }}"><button class="btn tiny light">Renew</button></form>{% endif %}
+{% if s.status not in ['Closed'] %}<form method="post" action="{{ url_for('subscription_action',sid=s.id,action='close') }}"><button class="btn tiny danger">Close</button></form>{% endif %}
+</td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty">No subscriptions yet.</div>{% endif %}</div>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<div class="page-head"><div><p class="eyebrow">TEAM ACCESS</p><h1>Staff</h1><p class="muted">Only admins can create staff accounts.</p></div></div>
+<div class="two-col"><section class="panel"><h2>Add staff member</h2><form method="post" class="form"><label>Name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Temporary password<input type="password" name="password" required></label><small>Password must be more than 8 characters and include uppercase, lowercase and a special character.</small><button class="btn primary">Create staff account</button></form></section>
+<section class="panel"><h2>Staff members</h2>{% for s in rows %}<div class="list-row"><div><b>{{ s.name }}</b><small>{{ s.email }} · Added {{ s.created_at }}</small></div><span class="status">Staff</span></div>{% else %}<div class="empty">No staff accounts yet.</div>{% endfor %}</section></div>
+{% endblock %}

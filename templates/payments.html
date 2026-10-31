@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<div class="page-head"><div><p class="eyebrow">MONEY IN</p><h1>Payments</h1><p class="muted">Record payments and track received amounts.</p></div></div>
+<div class="two-col"><section class="panel"><h2>Record a payment</h2>{% if invoices %}<form method="post" class="form">
+<label>Invoice<select name="invoice_id">{% for i in invoices %}<option value="{{ i.id }}">{{ i.number }} · {{ money(i.total) }} · {{ i.status }}</option>{% endfor %}</select></label>
+<label>Payment method<select name="method"><option>Bank transfer</option><option>UPI</option><option>Cash</option><option>Card (manual record)</option><option>Other</option></select></label>
+<label>Amount (₹)<input name="amount" type="number" min="0.01" step="0.01" required></label><label>Payment date<input name="payment_date" type="date" value="{{ today }}"></label><label>Note<input name="note"></label><button class="btn primary">Save payment</button></form>{% else %}<div class="empty">There are no unpaid invoices to record payments against.</div>{% endif %}</section>
+<section class="panel"><h2>Payment history</h2>{% for p in rows %}<div class="list-row"><div><b>{{ p.invoice_number }}</b><small>{{ p.method }} · {{ p.payment_date }} · {{ p.note }}</small></div><strong>{{ money(p.amount) }}</strong></div>{% else %}<div class="empty">No payments recorded.</div>{% endfor %}</section></div>
+{% endblock %}

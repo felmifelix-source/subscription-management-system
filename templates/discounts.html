@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<div class="page-head"><div><p class="eyebrow">PRICING RULES</p><h1>Discounts</h1><p class="muted">Create fixed or percentage discount rules.</p></div></div>
+<div class="two-col"><section class="panel"><h2>New discount rule</h2><form method="post" class="form">
+<label>Name<input name="name" required></label><label>Discount type<select name="discount_type"><option>Percentage</option><option>Fixed</option></select></label><label>Value<input type="number" min="0" step="0.01" name="value" required></label>
+<label>Minimum quantity<input type="number" min="1" name="minimum_quantity" value="1"></label><div class="form-row"><label>Start date<input type="date" name="start_date" required></label><label>End date<input type="date" name="end_date" required></label></div>
+<label>Usage limit<input type="number" min="1" name="usage_limit" value="100"></label><button class="btn primary">Create discount</button></form></section>
+<section class="panel"><h2>Discount rules</h2>{% for d in rows %}<div class="list-row"><div><b>{{ d.name }}</b><small>{{ d.discount_type }} · {{ d.start_date }} to {{ d.end_date }} · Used {{ d.used_count }}/{{ d.usage_limit }}</small></div><strong>{{ d.value }}{% if d.discount_type=='Percentage' %}%{% else %} ₹{% endif %}</strong></div>{% else %}<div class="empty">No discount rules.</div>{% endfor %}</section></div>
+{% endblock %}

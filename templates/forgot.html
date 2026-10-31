@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block auth_content %}
+<div class="auth-wrap"><div class="auth-card"><a class="brand auth-brand" href="/">brightloop<span>.</span></a>
+<h1>Reset password</h1><p class="muted">Enter your registered email address.</p>
+<form method="post" class="form"><label>Email address<input type="email" name="email" required></label><button class="btn primary full">Generate reset link</button></form>
+{% if demo_link %}<div class="demo-box">Demo reset link (email is not configured):<br><a href="{{ demo_link }}">{{ demo_link }}</a></div>{% endif %}
+<p class="bottom-link"><a href="{{ url_for('login') }}">Back to login</a></p></div></div>
+{% endblock %}
